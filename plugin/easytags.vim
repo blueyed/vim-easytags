@@ -152,9 +152,6 @@ function! s:RegisterTagsFile()
   endif
 endfunction
 
-" Let Vim know about the global tags file created by this plug-in.
-call s:RegisterTagsFile()
-
 " The :UpdateTags and :HighlightTags commands. {{{1
 
 command! -bar -bang -nargs=* -complete=file UpdateTags call xolox#easytags#update(0, <q-bang> == '!', [<f-args>])
@@ -164,6 +161,10 @@ command! -bar HighlightTags call xolox#easytags#highlight()
 
 augroup PluginEasyTags
   autocmd!
+  " Let Vim know about the global tags file created by this plug-in.
+  " Call this on entering Vim (after vimrc setup, which might (re)set 'tags').
+  autocmd VimEnter * call s:RegisterTagsFile()
+
   if g:easytags_always_enabled
     " TODO Also on FocusGained because tags files might be updated externally?
     autocmd BufReadPost,BufWritePost * call xolox#easytags#autoload()
